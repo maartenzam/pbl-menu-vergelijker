@@ -62,6 +62,9 @@ body {
         <option value="z">100% plant en 100 % dier</option>
       </select>
   </div>
+  <div>
+      <h3 id="totalCO2"></h3>
+  </div>
 
   <svg id ="viz"></svg>
 
@@ -111,6 +114,8 @@ d3.csv("data/co2.csv", function(d) {
         return filteredData;
     }
 
+    d3.select("#totalCO2").text(getDietData(scenario)[0].total);
+
     let stack = d3.stack()
         .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
 
@@ -130,6 +135,23 @@ d3.csv("data/co2.csv", function(d) {
             .transition().duration(1000)
             .attr("y", function(d) { return y(d[0][1]); })
             .attr("height", function(d) { return y(d[0][0]) - y(d[0][1]); });
+        
+        //d3.select("#totalCO2").text(getDietData(scenario)[0].total);
+        var format = d3.format("d");
+        d3.select("#totalCO2")
+          .transition()
+            .duration(1000)
+            .on("start", function repeat() {
+              d3.active(this)
+                  .tween("text", function() {
+                    var that = d3.select(this),
+                        i = d3.interpolateNumber(that.text(), getDietData(scenario)[0].total);
+                    return function(t) { that.text(format(i(t))); };
+                  })
+                .transition()
+                  .delay(1500)
+                  .on("start", repeat);
+            });
     })
 
 });

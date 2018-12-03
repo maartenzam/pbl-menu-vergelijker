@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-<style>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="style/style.css" rel="stylesheet">
 
-body {
-  font: 14px sans-serif;
-  position: relative;
-  font-family: 'Arial';
-}
-
-</style>
 <body>
+<div class="gridcontainer">
   <div class="selectors">
     <label for="menu">Menu</label>
     <select id="menu">
@@ -62,97 +56,20 @@ body {
         <option value="z">100% plant en 100 % dier</option>
       </select>
   </div>
-  <div>
-      <h3 id="totalCO2"></h3>
+  <div id="totalco2container">
+      <h2><span id="totalCO2"></span> CO2</h2>
   </div>
-
-  <svg id ="viz"></svg>
+  <div id="totallandcontainer">
+        <h2><span id="totalLand"></span> land</h2>
+    </div>
+  <div id="vizcontainer-co2">
+        <svg id="viz"></svg>
+  </div>
+  <div id="vizcontainer-land">
+        <svg id="viz-land"></svg>
+  </div>
+  
+</div>
 
 <script src="//d3js.org/d3.v5.min.js"></script>
-
-<script>
-
-let height = 400;
-
-let svg = d3.select("#viz")
-    .attr("width", 600)
-    .attr("height", 400)
-    .append("g");
-
-let y = d3.scaleLinear()
-    .range([height, 0]);
-
-let color = d3.scaleOrdinal(d3.schemeCategory10);
-
-d3.csv("data/co2.csv", function(d) {
-    return {
-        scenario: d.scenario,
-        zuivel: +d.zuivel,
-        rund: +d.rund,
-        varken: +d.varken,
-        kipei: +d.kipei,
-        agf: +d.agf,
-        vetsnack: +d.vetsnack,
-        drank: +d.drank,
-        graan: +d.graan,
-        zoet: +d.zoet,
-        vis: +d.vis,
-        vegi: +d.vegi,
-        total: +d.total
-    };
-}).then(function(data) {
-
-    let scenario = "basis_aaaaa";
-    let maxTotCO2 = d3.max(data, (d) => d.total);
-
-    y.domain([0, maxTotCO2]);
-
-    function getDietData(scen){
-        let filteredData = data.filter(function(el){
-            return el.scenario == scen;
-        })
-        return filteredData;
-    }
-
-    d3.select("#totalCO2").text(getDietData(scenario)[0].total);
-
-    let stack = d3.stack()
-        .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
-
-    let rects = svg.selectAll("rect")
-        .data(stack(getDietData(scenario)))
-        .enter().append('rect')
-        .attr("x", 20)
-        .attr("y", function(d) { return y(d[0][1]); })
-        .attr("height", function(d) { return y(d[0][0]) - y(d[0][1]); })
-        .attr("width", 50)
-        .style("fill", function(d) { return color(d.key)});
-
-    d3.selectAll("select").on("change", function(){
-        let scenario = d3.select("#menu").node().value + "_" + d3.select("#verspil").node().value + d3.select("#dierprod").node().value + d3.select("#dierwelz").node().value + d3.select("#plantprod").node().value + d3.select("#bio").node().value;
-        
-        rects.data(stack(getDietData(scenario)))
-            .transition().duration(1000)
-            .attr("y", function(d) { return y(d[0][1]); })
-            .attr("height", function(d) { return y(d[0][0]) - y(d[0][1]); });
-        
-        //d3.select("#totalCO2").text(getDietData(scenario)[0].total);
-        var format = d3.format("d");
-        d3.select("#totalCO2")
-          .transition()
-            .duration(1000)
-            .on("start", function repeat() {
-              d3.active(this)
-                  .tween("text", function() {
-                    var that = d3.select(this),
-                        i = d3.interpolateNumber(that.text(), getDietData(scenario)[0].total);
-                    return function(t) { that.text(format(i(t))); };
-                  })
-                .transition()
-                  .delay(1500)
-                  .on("start", repeat);
-            });
-    })
-
-});
-</script>
+<script src="js/scenariovergelijker.js"></script>

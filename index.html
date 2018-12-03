@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<style>
+
+body {
+  font: 14px sans-serif;
+  position: relative;
+  font-family: 'Arial';
+}
+
+</style>
+<body>
+  <div class="selectors">
+    <label for="menu">Menu</label>
+    <select id="menu">
+        <option value="basis">Basis</option>
+        <option value="2dgeenvlees">2dgeenvlees</option>
+        <option value="40d60p">40d60p</option>
+        <option value="50d50p">50d50p</option>
+        <option value="geenvlees">geenvlees</option>
+        <option value="mvdt">mvdt</option>
+        <option value="sv5">sv5</option>
+      </select>
+      
+      <label for="verspil">Verspilling</label>
+      <select id="verspil">
+        <option value="a">Basis</option>
+        <option value="b">25% minder</option>
+        <option value="c">50% minder</option>
+      </select>
+      
+      <label for="dierprod">Productie dieren</label>
+      <select id="dierprod">
+        <option value="a">Basis</option>
+        <option value="f">Trend 2030</option>
+        <option value="g">50% meer dan trend</option>
+        <option value="h">50% minder dan trend</option>
+      </select>
+
+      <label for="dierwelz">Welzijn dieren</label>
+      <select id="dierwelz">
+        <option value="a">Basis</option>
+        <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
+        <option value="l">Scharrelvarkens en -kippen</option>
+        <option value="m">Biologisch</option>
+      </select>
+
+      <label for="plantprod">Productie planten</label>
+      <select id="plantprod">
+        <option value="a">Basis</option>
+        <option value="q">Trend 2030</option>
+        <option value="r">+5%</option>
+        <option value="s">+15%</option>
+      </select>
+
+      <label for="bio">Biologisch</label>
+      <select id="bio">
+        <option value="a">Basis</option>
+        <option value="x">25% productie plant</option>
+        <option value="y">50% productie plant</option>
+        <option value="z">100% plant en 100 % dier</option>
+      </select>
+  </div>
+
+  <svg id ="viz"></svg>
+
+<script src="//d3js.org/d3.v5.min.js"></script>
+
+<script>
+
+let height = 400;
+
+let svg = d3.select("#viz")
+    .attr("width", 600)
+    .attr("height", 400)
+    .append("g");
+
+let y = d3.scaleLinear()
+    .range([height, 0]);
+
+let color = d3.scaleOrdinal(d3.schemeCategory10);
+
+d3.csv("data/co2.csv", function(d) {
+    return {
+        scenario: d.scenario,
+        zuivel: +d.zuivel,
+        rund: +d.rund,
+        varken: +d.varken,
+        kipei: +d.kipei,
+        agf: +d.agf,
+        vetsnack: +d.vetsnack,
+        drank: +d.drank,
+        graan: +d.graan,
+        zoet: +d.zoet,
+        vis: +d.vis,
+        vegi: +d.vegi,
+        total: +d.total
+    };
+}).then(function(data) {
+
+    let scenario = "basis_aaaaa";
+    let maxTotCO2 = d3.max(data, (d) => d.total);
+
+    y.domain([0, maxTotCO2]);
+
+    function getDietData(scen){
+        let filteredData = data.filter(function(el){
+            return el.scenario == scen;
+        })
+        return filteredData;
+    }
+
+    let stack = d3.stack()
+        .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
+
+    let rects = svg.selectAll("rect")
+        .data(stack(getDietData(scenario)))
+        .enter().append('rect')
+        .attr("x", 20)
+        .attr("y", function(d) { return y(d[0][1]); })
+        .attr("height", function(d) { return y(d[0][0]) - y(d[0][1]); })
+        .attr("width", 50)
+        .style("fill", function(d) { return color(d.key)});
+
+    d3.selectAll("select").on("change", function(){
+        let scenario = d3.select("#menu").node().value + "_" + d3.select("#verspil").node().value + d3.select("#dierprod").node().value + d3.select("#dierwelz").node().value + d3.select("#plantprod").node().value + d3.select("#bio").node().value;
+        
+        rects.data(stack(getDietData(scenario)))
+            .transition().duration(1000)
+            .attr("y", function(d) { return y(d[0][1]); })
+            .attr("height", function(d) { return y(d[0][0]) - y(d[0][1]); });
+    })
+
+});
+</script>

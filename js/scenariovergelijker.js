@@ -1,6 +1,6 @@
 let height = 400;
 let width = 400;
-let barWidth = 50;
+let barWidth = 80;
 
 let svg = d3.select("#viz")
     .attr("width", width)
@@ -77,6 +77,12 @@ d3.csv("data/co2.csv", function(d) {
 
     d3.select("#totalCO2").text(Math.round(getDietData(scenario, "co2")[0].total));
     d3.select("#totalLand").text(Math.round(getDietData(scenario, "land")[0].total));
+
+    d3.select("#legend").selectAll("span").data(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"])
+        .enter().append("span")
+        .attr("class", "legend-item")
+        .text((d) => d + " ")
+        .style("background-color", (d) => color(d));
 
     let stack = d3.stack()
         .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);

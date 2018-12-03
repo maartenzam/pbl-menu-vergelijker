@@ -7,7 +7,7 @@ body {
 .gridcontainer {
     display: grid;
     grid-template-columns: 20% 40% 40%;
-    grid-template-rows: 50px auto;
+    grid-template-rows: 50px auto 150px;
 }
 
 .selectors {
@@ -39,6 +39,14 @@ body {
     justify-self: center;
 }
 
+#legend {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    justify-self: center; 
+    align-self: center; 
+}
+
 select {
     width: 200px;
     display: block;
@@ -47,4 +55,10 @@ select {
 
 h2 {
     text-anchor: middle;
+}
+
+.legend-item {
+    font-size: 26px;
+    color: white;
+    padding: 10px;
 }

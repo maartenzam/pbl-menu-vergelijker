@@ -21,35 +21,35 @@ let color = d3.scaleOrdinal(d3.schemeCategory10);
 d3.csv("data/co2.csv", function(d) {
     return {
         scenario: d.scenario,
-        zuivel: +d.zuivel,
-        rund: +d.rund,
-        varken: +d.varken,
-        kipei: +d.kipei,
-        agf: +d.agf,
-        vetsnack: +d.vetsnack,
-        drank: +d.drank,
-        graan: +d.graan,
-        zoet: +d.zoet,
-        vis: +d.vis,
-        vegi: +d.vegi,
-        total: +d.total
+        zuivel: +d.zuivel*365/1000,
+        rund: +d.rund*365/1000,
+        varken: +d.varken*365/1000,
+        kipei: +d.kipei*365/1000,
+        agf: +d.agf*365/1000,
+        vetsnack: +d.vetsnack*365/1000,
+        drank: +d.drank*365/1000,
+        graan: +d.graan*365/1000,
+        zoet: +d.zoet*365/1000,
+        vis: +d.vis*365/1000,
+        vegi: +d.vegi*365/1000,
+        total: +d.total*365/1000
     };
 }).then(function(co2data) {
     d3.csv("data/land.csv", function(d) {
     return {
         scenario: d.scenario,
-        zuivel: +d.zuivel*1000,
-        rund: +d.rund*1000,
-        varken: +d.varken*1000,
-        kipei: +d.kipei*1000,
-        agf: +d.agf*1000,
-        vetsnack: +d.vetsnack*1000,
-        drank: +d.drank*1000,
-        graan: +d.graan*1000,
-        zoet: +d.zoet*1000,
-        vis: +d.vis*1000,
-        vegi: +d.vegi*1000,
-        total: +d.total*1000
+        zuivel: +d.zuivel*365,
+        rund: +d.rund*365,
+        varken: +d.varken*365,
+        kipei: +d.kipei*365,
+        agf: +d.agf*365,
+        vetsnack: +d.vetsnack*365,
+        drank: +d.drank*365,
+        graan: +d.graan*365,
+        zoet: +d.zoet*365,
+        vis: +d.vis*365,
+        vegi: +d.vegi*365,
+        total: +d.total*365
     };
 }).then(function(landdata) {
 

@@ -61,4 +61,10 @@ h2 {
     font-size: 26px;
     color: white;
     padding: 10px;
+    border: 1px white solid;
+}
+
+rect {
+    stroke: white;
+    stroke-width: 1;
 }

@@ -1,13 +1,55 @@
+@font-face {
+	font-family: "Sans";
+	src: url("fonts/ROsanswebtextregular.eot?") format("embedded-opentype"),
+	     url("fonts/ROsanswebtextregular.woff") format("opentype");
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "Sans";
+	src: url("fonts/ROsanswebtextitalic.eot?") format("embedded-opentype"),
+	     url("fonts/ROsanswebtextitalic.woff") format("opentype");
+	font-style: italic;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "Sans";
+	src: url("fonts/ROsanswebtextbold.eot?") format("embedded-opentype"),
+	     url("fonts/ROsanswebtextbold.woff") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Serif";
+	src: url("fonts/ROserifwebregular.eot?") format("embedded-opentype"),
+	     url("fonts/ROserifwebregular.woff") format("opentype");
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "Serif";
+	src: url("fonts/ROserifwebitalic.eot?") format("embedded-opentype"),
+	     url("fonts/ROserifwebitalic.woff") format("opentype");
+	font-style: italic;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "Serif";
+	src: url("fonts/ROserifwebbold.eot?") format("embedded-opentype"),
+	     url("fonts/ROserifwebbold.woff") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+
 body {
-  font: 14px sans-serif;
-  position: relative;
-  font-family: 'Roboto';
+  font-family: "Sans";
 }
 
 .gridcontainer {
     display: grid;
-    grid-template-columns: 20% 30% 30% 20%;
-    grid-template-rows: 50px auto 150px;
+    grid-template-columns: 200px auto auto 200px;
+    grid-template-rows: 30px 250px 250px 30px;
+    row-gap: 30px;
 }
 
 .selectors-left {

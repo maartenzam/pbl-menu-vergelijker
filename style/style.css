@@ -47,20 +47,34 @@ body {
 
 .gridcontainer {
     display: grid;
-    grid-template-columns: 200px auto auto 200px;
-    grid-template-rows: 30px 250px 250px 30px;
-    row-gap: 30px;
+    grid-template-columns: 300px auto auto 300px;
+    grid-template-rows: 40px 250px 250px 250px;
+}
+
+#title-left {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    justify-self: left; 
+    align-self: center;
+}
+
+#title-right {
+    grid-column-start: 4;
+    grid-row-start: 1;
+    justify-self: right;
+    align-self: center;  
 }
 
 .selectors-left {
     grid-column-start: 1;
     grid-row-start: 2;
-    grid-row-end: 3;
+    grid-row-end: 2;
 }
 .selectors-right {
     grid-column-start: 4;
     grid-row-start: 2;
-    grid-row-end: 3;
+    grid-row-end: 2;
+    justify-self: right;
 }
 
 #totalco2container-left {
@@ -73,6 +87,7 @@ body {
     grid-column-start: 2;
     grid-row-start: 4;
     justify-self: center;
+    align-self: top;
 }
 
 #totalco2container-right {
@@ -85,6 +100,7 @@ body {
     grid-column-start: 3;
     grid-row-start: 4;
     justify-self: center;
+    align-self: top;
 }
 
 #vizcontainer-co2-left {
@@ -110,11 +126,25 @@ body {
     grid-row-start: 3;
     justify-self: center;
 }
+#bord-left {
+    grid-column-start: 1;
+    grid-row-start: 3;
+    grid-row-end: 5;
+    justify-self: center;
+    align-self: center;
+}
+#bord-right {
+    grid-column-start: 4;
+    grid-row-start: 3;
+    grid-row-end: 5;
+    justify-self: center;
+    align-self: center;
+}
 
 select {
     width: 200px;
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 h2 {
@@ -131,4 +161,18 @@ h2 {
 rect {
     stroke: white;
     stroke-width: 1;
+}
+
+.domain {
+    stroke-width: 0;
+}
+
+div.tooltip {	
+    padding: 12px;
+    position: absolute;		
+    width: 150px;																
+    background: #00374D;	
+    border: 0px;				
+    pointer-events: none;
+    color: #ffffff;			
 }

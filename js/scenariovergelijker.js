@@ -1,29 +1,34 @@
 let height = 250;
-let width = 100;
+let width = 200;
 let barWidth = 80;
+let margin = {"top": 10, "bottom": 10, "left": 40, "right": 40}
 
 let svgCo2Left = d3.select("#viz-co2-left")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 let svgLandLeft = d3.select("#viz-land-left")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 let svgCo2Right = d3.select("#viz-co2-right")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
+    .append("g")
+    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
 let svgLandRight = d3.select("#viz-land-right")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
+    .append("g")
+    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
 
 let scales = {};
 scales.co2 = d3.scaleLinear()
-    .range([height, 0]);
+    .range([height - margin.top - margin.bottom, 0]);
 scales.land = d3.scaleLinear()
-    .range([height, 0]);
+    .range([height - margin.top - margin.bottom, 0]);
 
 let color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -44,6 +49,10 @@ const dierplant = {
     "vis": "Dierlijk",
     "vegi": "Plantaardig"
 }
+
+let tooltip = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 
 d3.csv("data/co2.csv", function(d) {
     return {
@@ -89,11 +98,49 @@ d3.csv("data/co2.csv", function(d) {
 
     let stack = d3.stack()
         .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
+
+    function drawPlate (leftright){
+        let plateSize = 250;
+        let svg = d3.select("#viz-bord-" + leftright)
+            .attr("height", plateSize)
+            .attr("width", plateSize)
+        svg.append("circle")
+            .attr("cx", plateSize/2)
+            .attr("cy", plateSize/2)
+            .attr("r", plateSize/2)
+            .style("fill", "#eeeeee")
+            .style("stroke", "#dddddd");
+    }
+    drawPlate("left");
+    drawPlate("right");
     
     function draw(leftright, scenario, impact){
         d3.select(`#total-${impact}-${leftright}`).text(Math.round(getDietData(scenario, impact)[0].total));
 
         let svg = getSvg(leftright, impact);
+
+        let axis;
+        if(leftright == "left"){
+            axis = d3.axisLeft()
+                .ticks(5)
+                .scale(scales[impact]);
+        }
+        if(leftright == "right"){
+            axis = d3.axisRight()
+                .ticks(5)
+                .scale(scales[impact]);
+        }
+
+        svg.append("g")
+            .attr("transform", function(){
+                if(leftright == "left"){
+                    return "translate(40, 0)";
+                }
+                if(leftright == "right"){
+                    return `translate(${width - 40}, 0)`
+                }
+            })
+            .call(axis);
 
         svg.selectAll("rect")
             .data(stack(getDietData(scenario, impact)))
@@ -116,7 +163,34 @@ d3.csv("data/co2.csv", function(d) {
                 }
             })
             .attr("width", barWidth)
-            .style("fill", function(d) { return colors(dierplant[d.key])});
+            .style("fill", function(d) { return colors(dierplant[d.key])})
+            .on("mouseover", function(d) {
+                d3.select(this)
+                    .style("stroke", "#00374D")
+                    .style("stroke-width", 2)
+                    .raise();
+                tooltip
+                    .html(`<h2>${d.key}</h2>
+                    <p>${impact}: ${Math.round(d[0].data[d.key])}</p>`)
+                    .transition()		
+                    .duration(200)		
+                    .style("opacity", 1)			
+                    .style("left", (d3.event.pageX + 28) + "px")		
+                    .style("top", (d3.event.pageY - 28) + "px");	
+                })
+                .on("mousemove", function(d) {		
+                    tooltip	
+                        .style("left", (d3.event.pageX + 28) + "px")		
+                        .style("top", (d3.event.pageY - 28) + "px");	
+                    })					
+              .on("mouseout", function(d) {	
+                d3.select(this)
+                    .style("stroke", "#ffffff")
+                    .style("stroke-width", 1);	
+                tooltip.transition()		
+                    .duration(500)		
+                    .style("opacity", 0);	
+            });
     }
 
     draw("left", scenario, "co2");

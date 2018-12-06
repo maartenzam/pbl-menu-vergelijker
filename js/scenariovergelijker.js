@@ -2,11 +2,11 @@ let height = 400;
 let width = 400;
 let barWidth = 80;
 
-let svg = d3.select("#viz")
+let svgCo2Left = d3.select("#viz-co2-left")
     .attr("width", width)
     .attr("height", height)
     .append("g");
-let svgLand = d3.select("#viz-land")
+let svgLandLeft = d3.select("#viz-land-left")
     .attr("width", width)
     .attr("height", height)
     .append("g");
@@ -87,7 +87,7 @@ d3.csv("data/co2.csv", function(d) {
     let stack = d3.stack()
         .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
 
-    let rectsCo2 = svg.selectAll("rect")
+    let rectsCo2 = svgCo2Left.selectAll("rect")
         .data(stack(getDietData(scenario, "co2")))
         .enter().append('rect')
         .attr("x", width/2 - barWidth/2)
@@ -96,7 +96,7 @@ d3.csv("data/co2.csv", function(d) {
         .attr("width", barWidth)
         .style("fill", function(d) { return color(d.key)});
 
-    let rectsLand = svgLand.selectAll("rect.land")
+    let rectsLand = svgLandLeft.selectAll("rect.land")
         .data(stack(getDietData(scenario, "land")))
         .enter().append('rect')
         .attr("x", width/2 - barWidth/2)

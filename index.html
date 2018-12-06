@@ -5,7 +5,7 @@
 
 <body>
 <div class="gridcontainer">
-  <div class="selectors">
+  <div class="selectors-left">
     <label for="menu">Menu</label>
     <select id="menu">
         <option value="basis">Basis</option>
@@ -56,19 +56,81 @@
         <option value="z">100% plant en 100 % dier</option>
       </select>
   </div>
-  <div id="totalco2container">
-      <h2><span id="totalCO2"></span> kilogram CO2/persoon/jaar</h2>
+  <div id="totalco2container-left">
+      <h2><span id="totalCO2-left"></span> kilogram CO2/persoon/jaar</h2>
   </div>
-  <div id="totallandcontainer">
-        <h2><span id="totalLand"></span> m2/persoon/jaar</h2>
-    </div>
-  <div id="vizcontainer-co2">
-        <svg id="viz"></svg>
+  <div id="totallandcontainer-left">
+        <h2><span id="totalLand-left"></span> m2/persoon/jaar</h2>
   </div>
-  <div id="vizcontainer-land">
-        <svg id="viz-land"></svg>
+  <div id="totalco2container-right">
+    <h2><span id="totalCO2-right"></span> kilogram CO2/persoon/jaar</h2>
   </div>
-  <div id="legend"></div>
+  <div id="totallandcontainer-right">
+        <h2><span id="totalLand-right"></span> m2/persoon/jaar</h2>
+  </div>  
+  <div id="vizcontainer-co2-left">
+        <svg id="viz-co2-left"></svg>
+  </div>
+  <div id="vizcontainer-co2-right">
+    <svg id="viz-co2-right"></svg>
+  </div>  
+  <div id="vizcontainer-land-left">
+        <svg id="viz-land-left"></svg>
+  </div>
+  <div id="vizcontainer-land-right">
+    <svg id="viz-land-right"></svg>
+  </div>
+  <div class="selectors-right">
+    <label for="menu">Menu</label>
+    <select id="menu">
+        <option value="basis">Basis</option>
+        <option value="2dgeenvlees">2dgeenvlees</option>
+        <option value="40d60p">40d60p</option>
+        <option value="50d50p">50d50p</option>
+        <option value="geenvlees">geenvlees</option>
+        <option value="mvdt">mvdt</option>
+        <option value="sv5">sv5</option>
+      </select>
+      
+      <label for="verspil">Verspilling</label>
+      <select id="verspil">
+        <option value="a">Basis</option>
+        <option value="b">25% minder</option>
+        <option value="c">50% minder</option>
+      </select>
+      
+      <label for="dierprod">Productie dieren</label>
+      <select id="dierprod">
+        <option value="a">Basis</option>
+        <option value="f">Trend 2030</option>
+        <option value="g">50% meer dan trend</option>
+        <option value="h">50% minder dan trend</option>
+      </select>
+
+      <label for="dierwelz">Welzijn dieren</label>
+      <select id="dierwelz">
+        <option value="a">Basis</option>
+        <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
+        <option value="l">Scharrelvarkens en -kippen</option>
+        <option value="m">Biologisch</option>
+      </select>
+
+      <label for="plantprod">Productie planten</label>
+      <select id="plantprod">
+        <option value="a">Basis</option>
+        <option value="q">Trend 2030</option>
+        <option value="r">+5%</option>
+        <option value="s">+15%</option>
+      </select>
+
+      <label for="bio">Biologisch</label>
+      <select id="bio">
+        <option value="a">Basis</option>
+        <option value="x">25% productie plant</option>
+        <option value="y">50% productie plant</option>
+        <option value="z">100% plant en 100 % dier</option>
+      </select>
+  </div>
   
 </div>
 

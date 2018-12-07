@@ -50,6 +50,20 @@ const dierplant = {
     "vegi": "Plantaardig"
 }
 
+const catnamen = {
+    "rund": "Rundvlees",
+    "varken": "Varkensvlees",
+    "zuivel": "Zuivel",
+    "kipei": "Kippenvlees en eieren",
+    "agf": "Aardappelen, groenten en fruit",
+    "vetsnack": "Vetten, hartige sauzen, snacks",
+    "drank": "Dranken",
+    "graan": "Brood, graanproducten",
+    "zoet": "Zoete producten en gebak",
+    "vis": "Vis",
+    "vegi": "Vegetarische producten, noten, peulvruchten"
+}
+
 let tooltip = d3.select("body").append("div")	
     .attr("class", "tooltip")				
     .style("opacity", 0);
@@ -123,11 +137,15 @@ d3.csv("data/co2.csv", function(d) {
         if(leftright == "left"){
             axis = d3.axisLeft()
                 .ticks(5)
+                .tickSize(20)
+                .tickPadding(10)
                 .scale(scales[impact]);
         }
         if(leftright == "right"){
             axis = d3.axisRight()
                 .ticks(5)
+                .tickSize(20)
+                .tickPadding(10)
                 .scale(scales[impact]);
         }
 
@@ -141,6 +159,7 @@ d3.csv("data/co2.csv", function(d) {
                 }
             })
             .call(axis);
+        svg.selectAll("g.tick line").style("stroke", "#cccccc");
 
         svg.selectAll("rect")
             .data(stack(getDietData(scenario, impact)))
@@ -170,7 +189,7 @@ d3.csv("data/co2.csv", function(d) {
                     .style("stroke-width", 2)
                     .raise();
                 tooltip
-                    .html(`<h2>${d.key}</h2>
+                    .html(`<h2>${catnamen[d.key]}</h2>
                     <p>${impact}: ${Math.round(d[0].data[d.key])}</p>`)
                     .transition()		
                     .duration(200)		

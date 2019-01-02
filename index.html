@@ -8,17 +8,23 @@
 <div class="container">
   <div class="row">
       <div class="col-2">
-        <p>1. Kies een scenario</p>
+        <p class="bold"><span class="big">1.</span> Kies scenario:</p>
       </div>
-      <div class="col-5"><p>2. Bekijk en vergelijk de impact van je keuze</p></div>
-      <div class="col-5"><p>Legende</p></div>
+      <div class="col-5"><p class="bold"><span class="big">2 .</span> Bekijk en vergelijk de impact van je keuze:</p></div>
+      <div class="col-5"><p><span style="color: #ffffff; background-color: #439BD9; padding: 3px;">Dierlijk</span> <span style="color: #ffffff; background-color: #B8B87B; padding: 3px;">Plantaardig</span></p></div>
   </div>
   <div class="row">
       <div class="col-2">
-        <p>Scenario 1</p>
+        <p class="bold">Scenario 1</p>
       </div>
-      <div class="col-5"><p>Landgebruik</p></div>
-      <div class="col-5"><p>CO2 uitstoot</p></div>
+      <div class="col-5">
+        <p class="bold big">Landgebruik</p>
+        <p class="small">m2 per persoon</p>
+      </div>
+      <div class="col-5">
+        <p class="bold big">Uitstoot broeikasgassen</p>
+        <p class="small">CO2-eq. in kg per persoon per jaar</p>
+      </div>
   </div>
 
   <div class="row">
@@ -76,18 +82,16 @@
             </div>
       </div>
       <div class="col-5">
-          <p><span id="total-land-top"></span> m2/persoon/jaar</p>
           <svg id="viz-land-top"></svg>
       </div>
       <div class="col-5">
-          <p><span id="total-co2-top"></span> kg CO2/persoon/jaar</p>
           <svg id="viz-co2-top"></svg>
       </div>
   </div>
 
   <div class="row">
       <div class="col-2">
-        <p>Scenario 2</p>
+        <p class="bold">Scenario 2</p>
       </div>
       <div class="col-5"></div>
       <div class="col-5"></div>
@@ -148,11 +152,9 @@
             </div>
       </div>
       <div class="col-5">
-          <p><span id="total-land-bottom"></span> m2/persoon/jaar</p>
           <svg id="viz-land-bottom"></svg>
       </div>
       <div class="col-5">
-          <p><span id="total-co2-bottom"></span> kg CO2/persoon/jaar</p>
           <svg id="viz-co2-bottom"></svg>
       </div>
   </div>

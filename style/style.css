@@ -43,6 +43,7 @@
 
 body {
   font-family: "Sans";
+  color: #2D6D96;
 }
 
 select {
@@ -83,4 +84,23 @@ div.tooltip {
 
 .tick line {
     stroke: "#cccccc";
+}
+
+.data-label {
+    font-size: 18px;
+    font-weight: bold;
+    fill: #2D6D96;
+}
+
+.big {
+    font-size: 32px;
+    margin: 0px;
+}
+
+.small {
+    font-size: 10px;
+}
+
+.bold {
+    font-weight: bold;
 }

@@ -1,7 +1,7 @@
 let height = 160;
-let width = 300;
+let width = 360;
 let barHeight = 80;
-let margin = {"top": 0, "bottom": 0, "left": 10, "right": 20}
+let margin = {"top": 20, "bottom": 0, "left": 10, "right": 20}
 
 let svgCo2Top = d3.select("#viz-co2-top")
     .attr("width", width)
@@ -33,7 +33,7 @@ scales.land = d3.scaleLinear()
 let color = d3.scaleOrdinal(d3.schemeCategory10);
 
 const colors = d3.scaleOrdinal()
-    .range(["#0087BE", "#A2A448"])
+    .range(["#439BD9", "#B8B87B"])
     .domain(["Dierlijk", "Plantaardig"]);
 
 const dierplant = {
@@ -130,16 +130,13 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
         let ticks = svg.selectAll("line.tick").data(extents[impact])
             .enter().append("g");
 
-        ticks.append("line")
-            .attr("x1", (d)  => scales[impact](d))
-            .attr("x2", (d)  => scales[impact](d))
-            .attr("y1", 90)
-            .attr("y2", 110)
-            .style("stroke", "#A6CDEF")
-            .style("stroke-width", 2);
+        ticks.append("path")
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .attr("transform", (d) => `translate(${scales[impact](d)},${margin.top + barHeight + 12})`)
+            .style("fill", "#A6CDEF");
         ticks.append("text")
             .attr("x", (d)  => scales[impact](d))
-            .attr("y", 124)
+            .attr("y", margin.top + barHeight + 36)
             .style("fill", "#A6CDEF")
             .style("text-anchor", "middle")
             .text(function(d,i){
@@ -148,19 +145,32 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
             });
 
         let current = svg.append("g");
-        current.append("line")
-            .attr("x1", scales[impact](getDietData(scenario, impact)[0].total))
-            .attr("x2", scales[impact](getDietData(scenario, impact)[0].total))
-            .attr("y1", 90)
-            .attr("y2", 110)
-            .style("stroke", "#A6CDEF")
-            .style("stroke-width", 2);
+        current.append("path")
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .attr("transform", `translate(${scales[impact](getDietData(scenario, impact)[0].total)},${margin.top + barHeight + 12})`)
+            .style("fill", "#A6CDEF");
         current.append("text")
             .attr("x", scales[impact](getDietData(scenario, impact)[0].total))
-            .attr("y", 124)
+            .attr("y", margin.top + barHeight + 36)
             .style("fill", "#A6CDEF")
-            .style("text-anchor", "middle")
+            .style("text-anchor", function(){
+                if(impact == "co2"){ return "end"; }
+                else{ return "middle"; }
+            })
             .text("huidig");
+
+        svg.append("text")
+            .attr("id", function(){return `total-${impact}-${topbottom}`})
+            .attr("class", "data-label")
+            .attr("x", scales[impact](getDietData(scenario, impact)[0].total))
+            .attr("y", 2)
+            .style("text-anchor", "middle")
+            .text(Math.round(getDietData(scenario, impact)[0].total));
+        svg.append("path")
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
+            .attr("id", function(){return `triangle-${impact}-${topbottom}`})
+            .attr("transform", `translate(${scales[impact](getDietData(scenario, impact)[0].total)},${margin.top - 10}) rotate(180)`)
+            .style("fill", "#2D6D96");
 
 
         svg.selectAll("rect.bar")
@@ -226,6 +236,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
         d3.select("#total-co2-" + topbottom)
           .transition()
             .duration(1000)
+            .attr("x", scales["co2"](getDietData(scenario, "co2")[0].total))
             .on("start", function repeat() {
               d3.active(this)
                   .tween("text", function() {
@@ -237,10 +248,15 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                   .delay(1500)
                   .on("start", repeat);
             });
+        d3.select("#triangle-co2-" + topbottom)
+            .transition()
+            .duration(1000)
+            .attr("transform", `translate(${scales["co2"](getDietData(scenario, "co2")[0].total)},${margin.top - 10}) rotate(180)`);
 
         d3.select("#total-land-" + topbottom)
           .transition()
             .duration(1000)
+            .attr("x", scales["land"](getDietData(scenario, "land")[0].total))
             .on("start", function repeat() {
               d3.active(this)
                   .tween("text", function() {
@@ -252,7 +268,10 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                   .delay(1500)
                   .on("start", repeat);
             });
-
+        d3.select("#triangle-land-" + topbottom)
+            .transition()
+            .duration(1000)
+            .attr("transform", `translate(${scales["land"](getDietData(scenario, "land")[0].total)},${margin.top - 10}) rotate(180)`);
         });
 
         function getSvg(topbottom, impact){

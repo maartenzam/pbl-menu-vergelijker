@@ -68,7 +68,7 @@ let tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
-d3.csv("data/co2.csv", function(d) {
+d3.csv("data/co2-2018-12-14.csv", function(d) {
     return {
         scenario: d.scenario,
         zuivel: +d.zuivel*365/1000,
@@ -85,7 +85,7 @@ d3.csv("data/co2.csv", function(d) {
         total: +d.total*365/1000
     };
 }).then(function(co2data) {
-    d3.csv("data/land.csv", function(d) {
+    d3.csv("data/land-2018-12-14.csv", function(d) {
     return {
         scenario: d.scenario,
         zuivel: +d.zuivel*365,

@@ -1,143 +1,146 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="style/simple-grid.css" rel="stylesheet">
 <link href="style/style.css" rel="stylesheet">
 
 <body>
-<div class="gridcontainer">
-  <div id="title-left">
-    <h2>Mijn scenario</h2>
+<div class="container">
+  <div class="row">
+      <div class="col-2">
+        <p>1. Kies een scenario</p>
+      </div>
+      <div class="col-5"><p>2. Bekijk en vergelijk de impact van je keuze</p></div>
+      <div class="col-5"><p>Legende</p></div>
   </div>
-  <div id="title-right">
-    <h2>Alernatief scenario</h2>
-  </div>
-  <div class="selectors-left">
-    <label for="menu-left">Menu</label>
-    <select id="menu-left" class="left">
-        <option value="basis">Basis</option>
-        <option value="2dgeenvlees">2dgeenvlees</option>
-        <option value="40d60p">40d60p</option>
-        <option value="50d50p">50d50p</option>
-        <option value="geenvlees">geenvlees</option>
-        <option value="mvdt">mvdt</option>
-        <option value="sv5">sv5</option>
-      </select>
-      
-      <label for="verspil-left">Verspilling</label>
-      <select id="verspil-left"  class="left">
-        <option value="a">Basis</option>
-        <option value="b">25% minder</option>
-        <option value="c">50% minder</option>
-      </select>
-      
-      <label for="dierprod-left">Productie dieren</label>
-      <select id="dierprod-left" class="left">
-        <option value="a">Basis</option>
-        <option value="f">Trend 2030</option>
-        <option value="g">50% meer dan trend</option>
-        <option value="h">50% minder dan trend</option>
-      </select>
 
-      <label for="dierwelz-left">Welzijn dieren</label>
-      <select id="dierwelz-left" class="left">
-        <option value="a">Basis</option>
-        <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
-        <option value="l">Scharrelvarkens en -kippen</option>
-        <option value="m">Biologisch</option>
-      </select>
+  <div class="row">
+      <div class="col-2">
+          <div class="selectors-left">
+              <label for="menu-left">Menu</label>
+              <select id="menu-left" class="left">
+                  <option value="basis">Basis</option>
+                  <option value="2dgeenvlees">2dgeenvlees</option>
+                  <option value="40d60p">40d60p</option>
+                  <option value="50d50p">50d50p</option>
+                  <option value="geenvlees">geenvlees</option>
+                  <option value="mvdt">mvdt</option>
+                  <option value="sv5">sv5</option>
+                </select>
+                
+                <label for="verspil-left">Verspilling</label>
+                <select id="verspil-left"  class="left">
+                  <option value="a">Basis</option>
+                  <option value="b">25% minder</option>
+                  <option value="c">50% minder</option>
+                </select>
+                
+                <label for="dierprod-left">Productie dieren</label>
+                <select id="dierprod-left" class="left">
+                  <option value="a">Basis</option>
+                  <option value="f">Trend 2030</option>
+                  <option value="g">50% meer dan trend</option>
+                  <option value="h">50% minder dan trend</option>
+                </select>
+          
+                <label for="dierwelz-left">Welzijn dieren</label>
+                <select id="dierwelz-left" class="left">
+                  <option value="a">Basis</option>
+                  <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
+                  <option value="l">Scharrelvarkens en -kippen</option>
+                  <option value="m">Biologisch</option>
+                </select>
+          
+                <label for="plantprod-left">Productie planten</label>
+                <select id="plantprod-left" class="left">
+                  <option value="a">Basis</option>
+                  <option value="q">Trend 2030</option>
+                  <option value="r">+5%</option>
+                  <option value="s">+15%</option>
+                </select>
+          
+                <label for="bio-left">Biologisch</label>
+                <select id="bio-left" class="left">
+                  <option value="a">Basis</option>
+                  <option value="x">25% productie plant</option>
+                  <option value="y">50% productie plant</option>
+                  <option value="z">100% plant en 100 % dier</option>
+                </select>
+            </div>
+      </div>
+      <div class="col-5">
+          <p><span id="total-land-left"></span> m2/persoon/jaar</p>
+          <svg id="viz-land-left"></svg>
+      </div>
+      <div class="col-5">
+          <p><span id="total-land-right"></span> m2/persoon/jaar</p>
+          <svg id="viz-land-right"></svg>
+      </div>
+  </div>
 
-      <label for="plantprod-left">Productie planten</label>
-      <select id="plantprod-left" class="left">
-        <option value="a">Basis</option>
-        <option value="q">Trend 2030</option>
-        <option value="r">+5%</option>
-        <option value="s">+15%</option>
-      </select>
-
-      <label for="bio-left">Biologisch</label>
-      <select id="bio-left" class="left">
-        <option value="a">Basis</option>
-        <option value="x">25% productie plant</option>
-        <option value="y">50% productie plant</option>
-        <option value="z">100% plant en 100 % dier</option>
-      </select>
+  <div class="row">
+      <div class="col-2">
+          <div class="selectors-right">
+              <label for="menu-right">Menu</label>
+              <select id = "menu-right" class="right">
+                  <option value="basis">Basis</option>
+                  <option value="2dgeenvlees">2dgeenvlees</option>
+                  <option value="40d60p">40d60p</option>
+                  <option value="50d50p">50d50p</option>
+                  <option value="geenvlees">geenvlees</option>
+                  <option value="mvdt">mvdt</option>
+                  <option value="sv5">sv5</option>
+                </select>
+                
+                <label for="verspil-right">Verspilling</label>
+                <select id="verspil-right" class="right">
+                  <option value="a">Basis</option>
+                  <option value="b">25% minder</option>
+                  <option value="c">50% minder</option>
+                </select>
+                
+                <label for="dierprod-right">Productie dieren</label>
+                <select id="dierprod-right" class="right">
+                  <option value="a">Basis</option>
+                  <option value="f">Trend 2030</option>
+                  <option value="g">50% meer dan trend</option>
+                  <option value="h">50% minder dan trend</option>
+                </select>
+          
+                <label for="dierwelz-right">Welzijn dieren</label>
+                <select id="dierwelz-right" class="right">
+                  <option value="a">Basis</option>
+                  <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
+                  <option value="l">Scharrelvarkens en -kippen</option>
+                  <option value="m">Biologisch</option>
+                </select>
+          
+                <label for="plantprod-right">Productie planten</label>
+                <select id="plantprod-right" class="right">
+                  <option value="a">Basis</option>
+                  <option value="q">Trend 2030</option>
+                  <option value="r">+5%</option>
+                  <option value="s">+15%</option>
+                </select>
+          
+                <label for="bio-right">Biologisch</label>
+                <select id="bio-right" class="right">
+                  <option value="a">Basis</option>
+                  <option value="x">25% productie plant</option>
+                  <option value="y">50% productie plant</option>
+                  <option value="z">100% plant en 100 % dier</option>
+                </select>
+            </div>
+      </div>
+      <div class="col-5">
+          <p><span id="total-co2-left"></span> kg CO2/persoon/jaar</p>
+          <svg id="viz-co2-left"></svg>
+      </div>
+      <div class="col-5">
+          <p><span id="total-co2-right"></span> kg CO2/persoon/jaar</p>
+          <svg id="viz-co2-right"></svg>
+      </div>
   </div>
-  <div id="totalco2container-left">
-        <p><span id="total-co2-left"></span> kg CO2/persoon/jaar</p>
-  </div>
-  <div id="totallandcontainer-left">
-        <p><span id="total-land-left"></span> m2/persoon/jaar</p>
-  </div>
-  <div id="totalco2container-right">
-    <p><span id="total-co2-right"></span> kg CO2/persoon/jaar</p>
-  </div>
-  <div id="totallandcontainer-right">
-        <p><span id="total-land-right"></span> m2/persoon/jaar</p>
-  </div>  
-  <div id="vizcontainer-co2-left">
-        <svg id="viz-co2-left"></svg>
-  </div>
-  <div id="vizcontainer-co2-right">
-    <svg id="viz-co2-right"></svg>
-  </div>  
-  <div id="vizcontainer-land-left">
-        <svg id="viz-land-left"></svg>
-  </div>
-  <div id="vizcontainer-land-right">
-    <svg id="viz-land-right"></svg>
-  </div>
-  <div class="selectors-right">
-    <label for="menu-right">Menu</label>
-    <select id = "menu-right" class="right">
-        <option value="basis">Basis</option>
-        <option value="2dgeenvlees">2dgeenvlees</option>
-        <option value="40d60p">40d60p</option>
-        <option value="50d50p">50d50p</option>
-        <option value="geenvlees">geenvlees</option>
-        <option value="mvdt">mvdt</option>
-        <option value="sv5">sv5</option>
-      </select>
-      
-      <label for="verspil-right">Verspilling</label>
-      <select id="verspil-right" class="right">
-        <option value="a">Basis</option>
-        <option value="b">25% minder</option>
-        <option value="c">50% minder</option>
-      </select>
-      
-      <label for="dierprod-right">Productie dieren</label>
-      <select id="dierprod-right" class="right">
-        <option value="a">Basis</option>
-        <option value="f">Trend 2030</option>
-        <option value="g">50% meer dan trend</option>
-        <option value="h">50% minder dan trend</option>
-      </select>
-
-      <label for="dierwelz-right">Welzijn dieren</label>
-      <select id="dierwelz-right" class="right">
-        <option value="a">Basis</option>
-        <option value="k">Huidig: beter dierenwelzijn varkens en kippen</option>
-        <option value="l">Scharrelvarkens en -kippen</option>
-        <option value="m">Biologisch</option>
-      </select>
-
-      <label for="plantprod-right">Productie planten</label>
-      <select id="plantprod-right" class="right">
-        <option value="a">Basis</option>
-        <option value="q">Trend 2030</option>
-        <option value="r">+5%</option>
-        <option value="s">+15%</option>
-      </select>
-
-      <label for="bio-right">Biologisch</label>
-      <select id="bio-right" class="right">
-        <option value="a">Basis</option>
-        <option value="x">25% productie plant</option>
-        <option value="y">50% productie plant</option>
-        <option value="z">100% plant en 100 % dier</option>
-      </select>
-  </div>
-  
 </div>
 
 <script src="//d3js.org/d3.v5.min.js"></script>

@@ -1,34 +1,34 @@
-let height = 250;
-let width = 200;
-let barWidth = 80;
-let margin = {"top": 10, "bottom": 10, "left": 40, "right": 40}
+let height = 100;
+let width = 400;
+let barHeight = 80;
+let margin = {"top": 0, "bottom": 0, "left": 0, "right": 0}
 
-let svgCo2Left = d3.select("#viz-co2-left")
+let svgCo2Top = d3.select("#viz-co2-top")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-let svgLandLeft = d3.select("#viz-land-left")
+    .append("g");
+    //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+let svgLandTop = d3.select("#viz-land-top")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-let svgCo2Right = d3.select("#viz-co2-right")
+    .append("g");
+    //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+let svgCo2Bottom = d3.select("#viz-co2-bottom")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
-let svgLandRight = d3.select("#viz-land-right")
+    .append("g");
+    //.attr("transform", `translate(${-margin.left}, ${margin.top})`);
+let svgLandBottom = d3.select("#viz-land-bottom")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
+    .append("g");
+    //.attr("transform", `translate(${-margin.left}, ${margin.top})`);
 
 let scales = {};
 scales.co2 = d3.scaleLinear()
-    .range([height - margin.top - margin.bottom, 0]);
+    .range([0, width - margin.left - margin.right]);
 scales.land = d3.scaleLinear()
-    .range([height - margin.top - margin.bottom, 0]);
+    .range([0, width - margin.left - margin.right]);
 
 let color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -108,32 +108,18 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
     let maxTotLand = d3.max(landdata, (d) => d.total);
 
     scales.co2.domain([0, maxTotCO2]);
-    scales.land.domain([maxTotLand, 0]);
+    scales.land.domain([0, maxTotLand]);
 
     let stack = d3.stack()
-        .keys(["zuivel", "rund", "varken", "kipei", "agf", "vetsnack", "drank", "graan", "zoet", "vis", "vegi"]);
-
-    function drawPlate (leftright){
-        let plateSize = 250;
-        let svg = d3.select("#viz-bord-" + leftright)
-            .attr("height", plateSize)
-            .attr("width", plateSize)
-        svg.append("circle")
-            .attr("cx", plateSize/2)
-            .attr("cy", plateSize/2)
-            .attr("r", plateSize/2)
-            .style("fill", "#eeeeee")
-            .style("stroke", "#dddddd");
-    }
-    drawPlate("left");
-    drawPlate("right");
+        .keys(["zuivel", "rund", "varken", "kipei", "vis", "agf", "vetsnack", "drank", "graan", "zoet", "vegi"]);
     
-    function draw(leftright, scenario, impact){
-        d3.select(`#total-${impact}-${leftright}`).text(Math.round(getDietData(scenario, impact)[0].total));
+    function draw(topbottom, scenario, impact){
+        d3.select(`#total-${impact}-${topbottom}`).text(Math.round(getDietData(scenario, impact)[0].total));
 
-        let svg = getSvg(leftright, impact);
+        let svg = getSvg(topbottom, impact);
 
-        let axis;
+        //To replace by min, max, ... indicators
+        /*let axis;
         if(leftright == "left"){
             axis = d3.axisLeft()
                 .ticks(5)
@@ -159,29 +145,15 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                 }
             })
             .call(axis);
-        svg.selectAll("g.tick line").style("stroke", "#cccccc");
+        svg.selectAll("g.tick line").style("stroke", "#cccccc");*/
 
         svg.selectAll("rect")
             .data(stack(getDietData(scenario, impact)))
             .enter().append('rect')
-            .attr("x", width/2 - barWidth/2)
-            .attr("y", function(d) { 
-                if(impact == "land"){
-                    return scales[impact](d[0][0]);
-                }
-                else{
-                    return scales[impact](d[0][1]); 
-                }
-            })
-            .attr("height", function(d) {
-                if(impact == "land"){
-                    return scales[impact](d[0][1]) - scales[impact](d[0][0]);
-                }
-                else{
-                    return scales[impact](d[0][0]) - scales[impact](d[0][1]);
-                }
-            })
-            .attr("width", barWidth)
+            .attr("y", height/2 - barHeight/2)
+            .attr("x", (d) => scales[impact](d[0][0]))
+            .attr("width", (d) => scales[impact](d[0][1]) - scales[impact](d[0][0]))
+            .attr("height", barHeight)
             .style("fill", function(d) { return colors(dierplant[d.key])})
             .on("mouseover", function(d) {
                 d3.select(this)
@@ -212,43 +184,29 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
             });
     }
 
-    draw("left", scenario, "co2");
-    draw("right", scenario, "co2");
-    draw("left", scenario, "land");
-    draw("right", scenario, "land");
+    draw("top", scenario, "co2");
+    draw("bottom", scenario, "co2");
+    draw("top", scenario, "land");
+    draw("bottom", scenario, "land");
 
-    function update(leftright, scenario, impact){
-        let svg = getSvg(leftright, impact);
+    function update(topbottom, scenario, impact){
+        let svg = getSvg(topbottom, impact);
         svg.selectAll("rect").data(stack(getDietData(scenario, impact)))
             .transition().duration(1000)
-            .attr("y", function(d) { 
-                if(impact == "land"){
-                    return scales[impact](d[0][0]);
-                }
-                else{
-                    return scales[impact](d[0][1]); 
-                }
-            })
-            .attr("height", function(d) {
-                if(impact == "land"){
-                    return scales[impact](d[0][1]) - scales[impact](d[0][0]);
-                }
-                else{
-                    return scales[impact](d[0][0]) - scales[impact](d[0][1]);
-                }
-            });
+            .attr("x", (d) => scales[impact](d[0][0]))
+            .attr("width", (d) => scales[impact](d[0][1]) - scales[impact](d[0][0]));
     }
 
     d3.selectAll("select").on("change", function(){
-        let leftright = d3.select(this).attr("class");
+        let topbottom = d3.select(this).attr("class");
 
-        let scenario = d3.select("#menu-" + leftright).node().value + "_" + d3.select("#verspil-" + leftright).node().value + d3.select("#dierprod-" + leftright).node().value + d3.select("#dierwelz-" + leftright).node().value + d3.select("#plantprod-" + leftright).node().value + d3.select("#bio-" + leftright).node().value;
+        let scenario = d3.select("#menu-" + topbottom).node().value + "_" + d3.select("#verspil-" + topbottom).node().value + d3.select("#dierprod-" + topbottom).node().value + d3.select("#dierwelz-" + topbottom).node().value + d3.select("#plantprod-" + topbottom).node().value + d3.select("#bio-" + topbottom).node().value;
 
-        update(leftright, scenario, "co2");
-        update(leftright, scenario, "land");
+        update(topbottom, scenario, "co2");
+        update(topbottom, scenario, "land");
         
         var format = d3.format("d");
-        d3.select("#total-co2-" + leftright)
+        d3.select("#total-co2-" + topbottom)
           .transition()
             .duration(1000)
             .on("start", function repeat() {
@@ -263,7 +221,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                   .on("start", repeat);
             });
 
-        d3.select("#total-land-" + leftright)
+        d3.select("#total-land-" + topbottom)
           .transition()
             .duration(1000)
             .on("start", function repeat() {
@@ -280,11 +238,11 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
 
         });
 
-        function getSvg(leftright, impact){
-            if(leftright == "left" && impact == "co2"){ return svgCo2Left; }
-            if(leftright == "left" && impact == "land"){ return svgLandLeft; }
-            if(leftright == "right" && impact == "co2"){ return svgCo2Right; }
-            if(leftright == "right" && impact == "land"){ return svgLandRight; }
+        function getSvg(topbottom, impact){
+            if(topbottom == "top" && impact == "co2"){ return svgCo2Top; }
+            if(topbottom == "top" && impact == "land"){ return svgLandTop; }
+            if(topbottom == "bottom" && impact == "co2"){ return svgCo2Bottom; }
+            if(topbottom == "bottom" && impact == "land"){ return svgLandBottom; }
         }
 
         function getDietData(scen, impact){

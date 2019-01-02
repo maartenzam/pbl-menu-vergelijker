@@ -17,12 +17,12 @@ let svgCo2Bottom = d3.select("#viz-co2-bottom")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 let svgLandBottom = d3.select("#viz-land-bottom")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 let scales = {};
 scales.co2 = d3.scaleLinear()
@@ -172,7 +172,6 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
             .attr("transform", `translate(${scales[impact](getDietData(scenario, impact)[0].total)},${margin.top - 10}) rotate(180)`)
             .style("fill", "#2D6D96");
 
-
         svg.selectAll("rect.bar")
             .data(stack(getDietData(scenario, impact)))
             .enter().append('rect')
@@ -207,8 +206,22 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                     .style("stroke-width", 1);	
                 tooltip.transition()		
                     .duration(500)		
-                    .style("opacity", 0);	
+                    .style("opacity", 0);
+                d3.selectAll("line.axis").raise();	
             });
+            svg.append("text")
+                .attr("x", scales[impact](0))
+                .attr("y", margin.top + barHeight + 36)
+                .style("text-anchor", "middle")
+                .style("fill", "#439BD9")
+                .text(0);
+            svg.append("line")
+                .attr("class", "axis")
+                .attr("x1", scales[impact](0))
+                .attr("x2", scales[impact](0))
+                .attr("y1", 0)
+                .attr("y2", margin.top + barHeight + 18)
+                .style("stroke", "#13374B");
     }
 
     draw("top", scenario, "co2");

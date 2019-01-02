@@ -81,6 +81,9 @@ div.tooltip {
     pointer-events: none;
     color: #ffffff;			
 }
+.tooltip p {
+	margin: 0px;
+}
 
 .tick line {
     stroke: "#cccccc";

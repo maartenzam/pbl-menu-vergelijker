@@ -187,7 +187,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                     .style("stroke-width", 2)
                     .raise();
                 tooltip
-                    .html(`<h2>${catnamen[d.key]}</h2>
+                    .html(`<p>${catnamen[d.key]}</p>
                     <p>${impact}: ${Math.round(d[0].data[d.key])}</p>`)
                     .transition()		
                     .duration(200)		

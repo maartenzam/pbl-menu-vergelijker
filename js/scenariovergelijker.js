@@ -1,34 +1,34 @@
-let height = 100;
-let width = 400;
+let height = 160;
+let width = 300;
 let barHeight = 80;
-let margin = {"top": 0, "bottom": 0, "left": 0, "right": 0}
+let margin = {"top": 0, "bottom": 0, "left": 10, "right": 20}
 
 let svgCo2Top = d3.select("#viz-co2-top")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
-    //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 let svgLandTop = d3.select("#viz-land-top")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
-    //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 let svgCo2Bottom = d3.select("#viz-co2-bottom")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
-    //.attr("transform", `translate(${-margin.left}, ${margin.top})`);
+    .append("g")
+    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
 let svgLandBottom = d3.select("#viz-land-bottom")
     .attr("width", width)
     .attr("height", height)
-    .append("g");
-    //.attr("transform", `translate(${-margin.left}, ${margin.top})`);
+    .append("g")
+    .attr("transform", `translate(${-margin.left}, ${margin.top})`);
 
 let scales = {};
 scales.co2 = d3.scaleLinear()
-    .range([0, width - margin.left - margin.right]);
+    .range([0, width - margin.right - margin.left]);
 scales.land = d3.scaleLinear()
-    .range([0, width - margin.left - margin.right]);
+    .range([0, width - margin.right - margin.left]);
 
 let color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -104,11 +104,14 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
 }).then(function(landdata) {
 
     let scenario = "basis_aaaaa";
-    let maxTotCO2 = d3.max(co2data, (d) => d.total);
-    let maxTotLand = d3.max(landdata, (d) => d.total);
 
-    scales.co2.domain([0, maxTotCO2]);
-    scales.land.domain([0, maxTotLand]);
+    let extents = {
+        "co2": d3.extent(co2data, (d) => d.total),
+        "land": d3.extent(landdata, (d) => d.total)
+    }
+
+    scales.co2.domain([0, extents["co2"][1]]);
+    scales.land.domain([0, extents["land"][1]]);
 
     let stack = d3.stack()
         .keys(["zuivel", "rund", "varken", "kipei", "vis", "agf", "vetsnack", "drank", "graan", "zoet", "vegi"]);
@@ -118,39 +121,53 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
 
         let svg = getSvg(topbottom, impact);
 
-        //To replace by min, max, ... indicators
-        /*let axis;
-        if(leftright == "left"){
-            axis = d3.axisLeft()
-                .ticks(5)
-                .tickSize(20)
-                .tickPadding(10)
-                .scale(scales[impact]);
-        }
-        if(leftright == "right"){
-            axis = d3.axisRight()
-                .ticks(5)
-                .tickSize(20)
-                .tickPadding(10)
-                .scale(scales[impact]);
-        }
+        svg.append("rect")
+            .attr("x", scales[impact](0))
+            .attr("width", scales[impact](extents[impact][1]))
+            .attr("y", margin.top)
+            .attr("height", barHeight)
+            .style("fill", "#F4F3E8");
+        let ticks = svg.selectAll("line.tick").data(extents[impact])
+            .enter().append("g");
 
-        svg.append("g")
-            .attr("transform", function(){
-                if(leftright == "left"){
-                    return "translate(40, 0)";
-                }
-                if(leftright == "right"){
-                    return `translate(${width - 40}, 0)`
-                }
-            })
-            .call(axis);
-        svg.selectAll("g.tick line").style("stroke", "#cccccc");*/
+        ticks.append("line")
+            .attr("x1", (d)  => scales[impact](d))
+            .attr("x2", (d)  => scales[impact](d))
+            .attr("y1", 90)
+            .attr("y2", 110)
+            .style("stroke", "#A6CDEF")
+            .style("stroke-width", 2);
+        ticks.append("text")
+            .attr("x", (d)  => scales[impact](d))
+            .attr("y", 124)
+            .style("fill", "#A6CDEF")
+            .style("text-anchor", "middle")
+            .text(function(d,i){
+                if(i == 0){ return "min"; }
+                if(i == 1){ return "max"; }
+            });
 
-        svg.selectAll("rect")
+        let current = svg.append("g");
+        current.append("line")
+            .attr("x1", scales[impact](getDietData(scenario, impact)[0].total))
+            .attr("x2", scales[impact](getDietData(scenario, impact)[0].total))
+            .attr("y1", 90)
+            .attr("y2", 110)
+            .style("stroke", "#A6CDEF")
+            .style("stroke-width", 2);
+        current.append("text")
+            .attr("x", scales[impact](getDietData(scenario, impact)[0].total))
+            .attr("y", 124)
+            .style("fill", "#A6CDEF")
+            .style("text-anchor", "middle")
+            .text("huidig");
+
+
+        svg.selectAll("rect.bar")
             .data(stack(getDietData(scenario, impact)))
             .enter().append('rect')
-            .attr("y", height/2 - barHeight/2)
+            .attr("class", "bar")
+            .attr("y", margin.top)
             .attr("x", (d) => scales[impact](d[0][0]))
             .attr("width", (d) => scales[impact](d[0][1]) - scales[impact](d[0][0]))
             .attr("height", barHeight)
@@ -191,7 +208,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
 
     function update(topbottom, scenario, impact){
         let svg = getSvg(topbottom, impact);
-        svg.selectAll("rect").data(stack(getDietData(scenario, impact)))
+        svg.selectAll("rect.bar").data(stack(getDietData(scenario, impact)))
             .transition().duration(1000)
             .attr("x", (d) => scales[impact](d[0][0]))
             .attr("width", (d) => scales[impact](d[0][1]) - scales[impact](d[0][0]));

@@ -30,8 +30,6 @@ scales.co2 = d3.scaleLinear()
 scales.land = d3.scaleLinear()
     .range([0, width - margin.right - margin.left]);
 
-let color = d3.scaleOrdinal(d3.schemeCategory10);
-
 const colors = d3.scaleOrdinal()
     .range(["#439BD9", "#B8B87B"])
     .domain(["Dierlijk", "Plantaardig"]);
@@ -127,9 +125,10 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
             .attr("y", margin.top)
             .attr("height", barHeight)
             .style("fill", "#F4F3E8");
+        
+        //Min and max labels
         let ticks = svg.selectAll("line.tick").data(extents[impact])
             .enter().append("g");
-
         ticks.append("path")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
             .attr("transform", (d) => `translate(${scales[impact](d)},${margin.top + barHeight + 12})`)
@@ -143,7 +142,8 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                 if(i == 0){ return "min"; }
                 if(i == 1){ return "max"; }
             });
-
+        
+        //Current label
         let current = svg.append("g");
         current.append("path")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
@@ -158,7 +158,8 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                 else{ return "middle"; }
             })
             .text("huidig");
-
+        
+        //Selected scenario label
         svg.append("text")
             .attr("id", function(){return `total-${impact}-${topbottom}`})
             .attr("class", "data-label")
@@ -209,6 +210,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                     .style("opacity", 0);
                 d3.selectAll("line.axis").raise();	
             });
+            //0 label + axis
             svg.append("text")
                 .attr("x", scales[impact](0))
                 .attr("y", margin.top + barHeight + 36)
@@ -240,12 +242,14 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
     d3.selectAll("select").on("change", function(){
         let topbottom = d3.select(this).attr("class");
 
+        //Construct selected scenario id
         let scenario = d3.select("#menu-" + topbottom).node().value + "_" + d3.select("#verspil-" + topbottom).node().value + d3.select("#dierprod-" + topbottom).node().value + d3.select("#dierwelz-" + topbottom).node().value + d3.select("#plantprod-" + topbottom).node().value + d3.select("#bio-" + topbottom).node().value;
 
         update(topbottom, scenario, "co2");
         update(topbottom, scenario, "land");
         
         var format = d3.format("d");
+        //Animate number
         d3.select("#total-co2-" + topbottom)
           .transition()
             .duration(1000)
@@ -261,6 +265,7 @@ d3.csv("data/co2-2018-12-14.csv", function(d) {
                   .delay(1500)
                   .on("start", repeat);
             });
+        //Animate translation of number
         d3.select("#triangle-co2-" + topbottom)
             .transition()
             .duration(1000)

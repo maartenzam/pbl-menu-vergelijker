@@ -143,7 +143,7 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
             
             //Selected scenario label
             svg.append("text")
-                .attr("id", function(){return "total-" + impact + "-" + topbottom})
+                .attr("id", "total-" + impact + "-" + topbottom)
                 .attr("class", "data-label")
                 .attr("x", scales[impact](getDietData(scenario, impact)[0].total))
                 .attr("y", 2)
@@ -151,14 +151,17 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
                 .text(Math.round(getDietData(scenario, impact)[0].total));
             svg.append("path")
                 .attr("d", d3.symbol().type(d3.symbolTriangle))
-                .attr("id", function(){return "triangle-" + impact + "-" + topbottom;})
+                .attr("id", "triangle-" + impact + "-" + topbottom)
                 .attr("transform", "translate(" + scales[impact](getDietData(scenario, impact)[0].total) + "," + (margin.top - 10) + ") rotate(180)")
                 .style("fill", "#2D6D96");
-    
+                
+            console.log(getDietData(scenario, impact));
+            console.log(stack(getDietData(scenario, impact)));
             svg.selectAll("rect.bar")
                 .data(stack(getDietData(scenario, impact)))
                 .enter().append('rect')
                 .attr("class", "bar")
+                .attr("id", function(d){return topbottom + "-" + impact + "-" + d.key})
                 .attr("y", margin.top)
                 .attr("x", function(d){ return scales[impact](d[0][0]); })
                 .attr("width", function(d) { return scales[impact](d[0][1]) - scales[impact](d[0][0]); })
@@ -214,10 +217,12 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
     
         function update(topbottom, scenario, impact){
             var svg = getSvg(topbottom, impact);
-            svg.selectAll("rect.bar").data(stack(getDietData(scenario, impact)))
-                .transition().duration(1000)
-                .attr("x", function(d){ return scales[impact](d[0][0]); })
-                .attr("width", function(d) { return scales[impact](d[0][1]) - scales[impact](d[0][0]); });
+            stack(getDietData(scenario, impact)).forEach(function(el){
+                svg.select("rect#" + topbottom + "-" + impact + "-" + el.key)
+                    .transition().duration(1000)
+                    .attr("x", function(d){ return scales[impact](el[0][0]); })
+                    .attr("width", function(d) { return scales[impact](el[0][1]) - scales[impact](el[0][0]); });
+            })
         }
     
         d3.selectAll("select").on("change", function(){

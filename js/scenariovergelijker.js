@@ -123,24 +123,7 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
                 .attr("width", scales[impact](extents[impact][1]))
                 .attr("y", margin.top)
                 .attr("height", barHeight)
-                .style("fill", "#F4F3E8");
-            
-            //Min and max labels
-            var ticks = svg.selectAll("line.tick").data(extents[impact])
-                .enter().append("g");
-            ticks.append("path")
-                .attr("d", d3.symbol().type(d3.symbolTriangle))
-                .attr("transform", function(d) { return "translate(" + scales[impact](d) + "," + (margin.top + barHeight + 12) + ")"; })
-                .style("fill", "#A6CDEF");
-            ticks.append("text")
-                .attr("x", function(d) { return scales[impact](d); })
-                .attr("y", margin.top + barHeight + 36)
-                .style("fill", "#A6CDEF")
-                .style("text-anchor", "middle")
-                .text(function(d,i){
-                    if(i == 0){ return "min"; }
-                    if(i == 1){ return "max"; }
-                });
+                .style("fill", "#f2f2f2");
             
             //Current label
             var current = svg.append("g");

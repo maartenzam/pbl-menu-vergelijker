@@ -1,5 +1,5 @@
 var height = 160;
-var width = 360;
+var width = d3.select(".vizcontainer").node().getBoundingClientRect().width;
 var barHeight = 80;
 var margin = {"top": 20, "bottom": 0, "left": 10, "right": 20}
 

@@ -155,8 +155,6 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
                 .attr("transform", "translate(" + scales[impact](getDietData(scenario, impact)[0].total) + "," + (margin.top - 10) + ") rotate(180)")
                 .style("fill", "#2D6D96");
                 
-            console.log(getDietData(scenario, impact));
-            console.log(stack(getDietData(scenario, impact)));
             svg.selectAll("rect.bar")
                 .data(stack(getDietData(scenario, impact)))
                 .enter().append('rect')
@@ -173,19 +171,25 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
                         .style("stroke-width", 2)
                         .raise();
                     tooltip
-                        .html("<p>" + catnamen[d.key] + "</p><p>" + impact + ": " + Math.round(d[0].data[d.key]) + "</p>")
+                        .html(function(){
+                            var units = "m²";
+                            if(impact == "co2"){
+                                units = "kg"
+                            }
+                            return "<p>" + catnamen[d.key] + "</p><p>" + Math.round(d[0].data[d.key]) + " " + units + "</p>"
+                        })
                         .transition()		
                         .duration(200)		
                         .style("opacity", 1)			
                         .style("left", (d3.event.pageX + 28) + "px")		
                         .style("top", (d3.event.pageY - 28) + "px");	
                     })
-                    .on("mousemove", function(d) {		
+                    .on("mousemove", function() {		
                         tooltip	
                             .style("left", (d3.event.pageX + 28) + "px")		
                             .style("top", (d3.event.pageY - 28) + "px");	
                         })					
-                  .on("mouseout", function(d) {	
+                  .on("mouseout", function() {	
                     d3.select(this)
                         .style("stroke", "#ffffff")
                         .style("stroke-width", 1);	
@@ -219,9 +223,28 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
             var svg = getSvg(topbottom, impact);
             stack(getDietData(scenario, impact)).forEach(function(el){
                 svg.select("rect#" + topbottom + "-" + impact + "-" + el.key)
+                .on("mouseover", function() {
+                    d3.select(this)
+                        .style("stroke", "#00374D")
+                        .style("stroke-width", 2)
+                        .raise();
+                    tooltip
+                        .html(function(){
+                            var units = "m²";
+                            if(impact == "co2"){
+                                units = "kg"
+                            }
+                            return "<p>" + catnamen[el.key] + "</p><p>" + Math.round(el[0].data[el.key]) + " " + units + "</p>"
+                        })
+                        .transition()		
+                        .duration(200)		
+                        .style("opacity", 1)			
+                        .style("left", (d3.event.pageX + 28) + "px")		
+                        .style("top", (d3.event.pageY - 28) + "px");	
+                    })
                     .transition().duration(1000)
-                    .attr("x", function(d){ return scales[impact](el[0][0]); })
-                    .attr("width", function(d) { return scales[impact](el[0][1]) - scales[impact](el[0][0]); });
+                    .attr("x", function(){ return scales[impact](el[0][0]); })
+                    .attr("width", function() { return scales[impact](el[0][1]) - scales[impact](el[0][0]); });
             })
         }
     

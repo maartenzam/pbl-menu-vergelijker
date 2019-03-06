@@ -127,7 +127,7 @@ body {
   }
 }
 
-@media only screen and (min-width: 920px) {  /* 45em 720px */
+@media only screen and (min-width: 760px) {  /* 45em 720px */
   .col-1 {
     width: 4.33%;
   }

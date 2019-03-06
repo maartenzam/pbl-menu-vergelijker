@@ -66,8 +66,8 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
-d3.csv("data/co2-2018-12-14.csv", function(co2data) {
-    d3.csv("data/land-2018-12-14.csv", function(landdata) {
+d3.csv("data/co2-2019-02-13.csv", function(co2data) {
+    d3.csv("data/land-2019-02-13.csv", function(landdata) {
         co2data.forEach(function(d){
             d.scenario = d.scenario,
             d.zuivel = +d.zuivel*365/1000,
@@ -139,7 +139,7 @@ d3.csv("data/co2-2018-12-14.csv", function(co2data) {
                     if(impact == "co2"){ return "end"; }
                     else{ return "middle"; }
                 })
-                .text("huidig");
+                .text("Huidig menu");
             
             //Selected scenario label
             svg.append("text")
